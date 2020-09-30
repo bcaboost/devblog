@@ -6,8 +6,14 @@ from django.contrib.auth.views import (
     LoginView,
     LogoutView
 )
+from django.http import HttpResponse
 
 from blogs.views import signup
+
+
+def custom_page_not_found(request):
+    return HttpResponse('PAGE NOT FOUND')
+
 
 
 urlpatterns = [
@@ -20,6 +26,7 @@ urlpatterns = [
     path('api/', include('pages.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', include('blogs.urls')),
+    path("404/", custom_page_not_found),
 ]
 
 if settings.DEBUG:
