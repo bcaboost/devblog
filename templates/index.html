@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}DEV Blog - By Developer, For Developer{% endblock %}
+
+{% block meta_des %}Read Articles from members across the globe.{% endblock %}
+{% block meta_author %}Developer{% endblock %}
+
+{% block fb_title %}DEV Blog - By Developer, For DeveloperV Blog{% endblock %}
+{% block fb_des %}Read Articles from members across the globe.{% endblock %}
+{% block fb_img %}https://cdn.dribbble.com/users/2068059/screenshots/4456420/tech_logo.png{% endblock %}
+
+{% block content %}
+
+{% if request.GET.search or request.GET.page %}
+	<section class="cta-section text-center theme-bg-light py-2 px-2">
+		<form class="signup-form form-inline justify-content-center pt-3" action="." method="GET">
+			<div class="form-group">
+				<input type="search" id="search" name="search" class="form-control mr-md-1 semail" placeholder="Search Anything..." {% if request.GET.search %}value="{{ request.GET.search }}"{% endif %}>
+			</div>
+			<button type="submit" class="btn btn-primary">Search</button>
+		</form> <br>
+		{% if request.GET.search %}
+			<strong>Search Results {% if author %}(By {{ author }}){% endif %}: </strong> {{ request.GET.search }} <a class="text-danger ml-3" href="."> <i class="fa fa-times"></i> clear</a>
+		{% endif %}
+		<br>
+	</section>
+{% else %}
+	<section class="cta-section theme-bg-light py-5">
+		<div class="container text-center">
+			<h2 class="heading">{% if author %}{{ author }} on DEV Blog{% else %}DEV Blog - By Developer, For Developer{% endif %}</h2>
+			<form class="signup-form form-inline justify-content-center pt-3" action="." method="GET">
+				<div class="form-group">
+					<input type="search" id="search" name="search" class="form-control mr-md-1 semail" placeholder="Search Anything...">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+			</form>
+		</div><!--//container-->
+	</section>
+{% endif %}
+
+<section class="blog-list px-3 py-5 p-md-5">
+	<div class="container">
+
+		{% for post in posts %}
+		<div class="item mb-5">
+			<div class="media">
+				{% if post.thumb %}
+					<img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{ post.thumb }}">
+				{% endif %}
+				<div class="media-body">
+					<h3 class="title mb-1"><a href="{% url 'single_post' post.author.username post.slug %}">{{ post.title }}</a></h3>
+					<div class="meta mb-1"><span class="date">Published {{ post.created_on|naturaltime }}</span><span class="author">By <a href="{% url 'author_page' post.author %}">{{ post.author }}</a></span><span class="time">{{ post.get_readtime }} read</span></div>
+					<div class="intro">{{ post.meta|truncatechars:170 }}</div>
+					<a class="more-link" href="{% url 'single_post' post.author.username post.slug %}">Read more &rarr;</a>
+					{% if request.user == post.author %}
+						<a class="text-danger" href="{% url 'update_post' post.slug %}">Update Post</a> |
+						<span>{% if post.published %}Published{% else %}Draft{% endif %}</span>
+					{% endif %}
+				</div><!--//media-body-->
+			</div><!--//media-->
+		</div><!--//item-->
+		{% endfor %}
+
+		{% if not posts %}
+		<section class="cta-section py-5">
+			<div class="container text-center">
+				<h4 class="heading">Nothing Found</h4>
+				<div class="intro">Try searching something else</div>
+			</div><!--//container-->
+		</section>
+		{% endif %}
+
+		{% if posts.paginator.num_pages > 1 %}
+		<nav class="blog-nav nav nav-justified my-5">
+			{% if posts.has_previous %}
+				  <a class="nav-link-next nav-item nav-link rounded m-1" href="{% if request.GET.search %}?search={{ request.GET.search }}&{% else %}?{% endif %}page={{ posts.previous_page_number }}">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+			{% endif %}
+			{% if posts.has_next %}
+		  		<a class="nav-link-next nav-item nav-link rounded m-1" href="{% if request.GET.search %}?search={{ request.GET.search }}&{% else %}?{% endif %}page={{ posts.next_page_number }}">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+			{% endif %}
+		</nav>
+		{% endif %}
+		
+	</div>
+</section>
+
+{% endblock content%}

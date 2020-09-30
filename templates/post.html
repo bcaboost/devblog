@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }} - DEV Blog{% endblock %}
+
+{% block meta_des %}{{ post.meta }}{% endblock %}
+{% block meta_author %}{{ post.author }}{% endblock %}
+
+{% block fb_title %}{{ post.title }} - DEV Blog{% endblock %}
+{% block fb_des %}{{ post.meta }}{% endblock %}
+{% block fb_img %}{{ post.thumb|default:"https://cdn.dribbble.com/users/2068059/screenshots/4456420/tech_logo.png" }}{% endblock %}
+
+{% block content %}
+
+<section class="cta-section text-center theme-bg-light px-2">
+	<form class="signup-form form-inline justify-content-center pt-3" action="/" method="GET">
+		<div class="form-group">
+			<input type="search" id="search" name="search" class="form-control mr-md-1 semail" placeholder="Search Anything...">
+		</div>
+		<button type="submit" class="btn btn-primary">Search</button>
+	</form> <br>
+</section>
+
+<article class="blog-post px-3 py-5 p-md-5">
+	<div class="container">
+
+		<header class="blog-post-header">
+			<h2 class="title mb-2">{{ post.title }}</h2>
+			<div class="meta mb-3">
+				<span class="date">Published {{ post.created_on|naturaltime}}</span>
+				<span class="author">By <a href="{% url 'author_page' post.author %}">{{ post.author }}</a></span>
+				<span class="time">{{ post.get_readtime }} read</span>
+			</div>
+		</header>
+		
+		<div class="blog-post-body">
+
+			{% if post.thumb %}
+				<figure class="text-center blog-banner">
+					<img class="img-fluid" src="{{ post.thumb }}">
+					<figcaption class="mt-2 text-center image-caption">Image Credit: <a href="{{ post.thumb }}" target="_blank">Source</a></figcaption>
+				</figure>
+			{% endif %}
+
+			<p><strong>{{ post.meta }}</strong></p>
+			<hr>
+			<p>{{ post.content|safe }}</p>
+
+			<div class="row">
+                <div class="col">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Share on Facebook" class="btn btn-primary round text-center btn-block" onclick="FBshare()">
+                      <i class="fa fa-facebook"></i>
+                    </button>
+                </div>
+                <div class="col">
+                  <button data-toggle="tooltip" data-placement="bottom" title="Share on Twitter" class="btn btn-info round text-center btn-block" onclick="TTshare()">
+                    <i class="fa fa-twitter"></i>
+                  </button>
+              </div>
+              <div class="col">
+                <button data-toggle="tooltip" data-placement="bottom" title="Share on Whatsapp" class="btn btn-success round text-center btn-block" onclick="WAshare()">
+                  <i class="fa fa-whatsapp"></i>
+                </button>
+              </div>
+              <div class="col">
+                <button data-toggle="tooltip" data-placement="bottom" title="Share on Email" class="btn btn-danger round text-center btn-block" onclick="Emailshare()">
+                  <i class="fa fa-envelope"></i>
+                </button>
+              </div>
+			</div> <!-- // comment row end -->
+			
+			<hr>
+			<h5>{{ post.comments.count }} Comments:</h5>
+			{% if new_comment %}
+				<div class="alert alert-success" role="alert">
+					Your comment is awaiting moderation
+				</div>
+			{% else %}
+				<h3>Leave a comment</h3>
+				<form method="post" action='.' style="margin-top: 1.3em;">
+					{% csrf_token %}
+					{{ comment_form.media }}
+
+					<div class="form-row">
+						<div class="form-group col-md-7 mb-0">
+						  {{ comment_form.name|as_crispy_field }}
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-7 mb-0">
+						  {{ comment_form.email|as_crispy_field }}
+						</div>
+					</div>
+					{{ comment_form.body|as_crispy_field }}
+					
+					<button type="submit" class="btn btn-primary  btn-lg">Post Comment</button>
+				</form>
+			{% endif %}
+			
+			{% for comment in comments %}
+			<hr>
+				<div class="comments" style="padding: 10px;">
+					<p class="font-weight-bold">
+						{{ comment.name }} {% if post.author == request.user %} (<a href="mailto:{{ comment.email }}">{{ comment.email }}</a>) {% endif %}
+						<span class=" text-muted font-weight-normal">
+							{{ comment.created_on|naturaltime }}
+						</span>
+					</p>
+					{{ comment.body | safe }}
+				</div>
+			{% endfor %}
+
+		</div> <!--//post body-->
+		
+	</div><!--//container-->
+</article>
+
+{% endblock content%}

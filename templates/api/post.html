@@ -1,0 +1,60 @@
+{% extends 'api/base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }} - DEV Blog{% endblock %}
+
+{% block content %}
+
+<section class="cta-section theme-bg-light py-5">
+	<div class="container text-center">
+		<h2 class="heading">DEV Blog - By Developer, For Developer</h2>
+	</div><!--//container-->
+</section>
+
+<article class="blog-post px-3 py-5 p-md-5">
+	<div class="container">
+
+		<header class="blog-post-header">
+			<h2 class="title mb-2">{{ post.title }}</h2>
+			<div class="meta mb-3">
+				<span class="date">Last Modified: {{ post.modified_on|naturaltime}}</span>
+			</div>
+		</header>
+		
+		<div class="blog-post-body">
+
+			<p>{{ post.content|safe }}</p>
+
+			<hr>
+			<hr>
+
+			<div class="row">
+                <div class="col">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Share on Facebook" class="btn btn-primary round text-center btn-block" onclick="FBshare()">
+                      <i class="fa fa-facebook"></i>
+                    </button>
+                </div>
+                <div class="col">
+                  <button data-toggle="tooltip" data-placement="bottom" title="Share on Twitter" class="btn btn-info round text-center btn-block" onclick="TTshare()">
+                    <i class="fa fa-twitter"></i>
+                  </button>
+              </div>
+              <div class="col">
+                <button data-toggle="tooltip" data-placement="bottom" title="Share on Whatsapp" class="btn btn-success round text-center btn-block" onclick="WAshare()">
+                  <i class="fa fa-whatsapp"></i>
+                </button>
+              </div>
+              <div class="col">
+                <button data-toggle="tooltip" data-placement="bottom" title="Share on Email" class="btn btn-danger round text-center btn-block" onclick="Emailshare()">
+                  <i class="fa fa-envelope"></i>
+                </button>
+              </div>
+			</div> 
+
+		</div> <!--//post body-->
+		
+	</div><!--//container-->
+</article>
+
+{% endblock content%}

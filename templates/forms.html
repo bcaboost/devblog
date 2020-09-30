@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %}Dashboard - DEV Blog{% endblock %}
+
+{% block meta_des %}User Dashboard in Dev Blog{% endblock %}
+{% block meta_author %}Dev Blog{% endblock %}
+
+{% block content %}
+
+<section class="cta-section theme-bg-light py-5">
+    <div class="container text-center">
+        <h2 class="heading">DEV Blog - By Developer, For Developer</h2>
+    </div><!--//container-->
+</section>
+
+<article class="blog-post px-3 py-5 p-md-5">
+	<div class="container">
+
+        <div class="blog-post-body">
+
+        <header class="blog-post-header text-center">
+		</header>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{form.media}}
+                {{form|crispy}}
+                <input type="submit" value="Submit">
+            </form>
+
+            {% if slug %}
+            <h4 class="text-danger mt-4">Delete Post?</h4>
+                <form method="POST" action="{% url 'delete_post' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="slug" value="{{ slug }}">
+                    <input type="submit" value="Delete">
+                </form>
+            {% endif %}
+
+
+        </div> <!--//post body-->
+		
+    </div><!--//container-->
+</article>
+
+{% endblock content%}
