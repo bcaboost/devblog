@@ -1,4 +1,4 @@
-
+# This is settings.py file
 import django_heroku
 from pathlib import Path
 
