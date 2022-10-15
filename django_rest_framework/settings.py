@@ -1,4 +1,5 @@
 # This is settings.py file
+# this file is important 
 import django_heroku
 from pathlib import Path
 
