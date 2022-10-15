@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+# instantiate User model
 User = get_user_model()
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
