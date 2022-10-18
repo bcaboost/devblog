@@ -21,7 +21,7 @@
 			<button type="submit" class="btn btn-primary">Search</button>
 		</form> <br>
 		{% if request.GET.search %}
-			<strong>Search Results {% if author %}(By {{ author }}){% endif %}: </strong> {{ request.GET.search }} <a class="text-danger ml-3" href="."> <i class="fa fa-times"></i> clear</a>
+			<strong>Search results {% if author %}(By {{ author }}){% endif %}: </strong> {{ request.GET.search }} <a class="text-danger ml-3" href="."> <i class="fa fa-times"></i> clear</a>
 		{% endif %}
 		<br>
 	</section>
